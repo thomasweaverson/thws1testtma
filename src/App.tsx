@@ -1,68 +1,68 @@
 import { useEffect, useState } from "react";
-import UserInfoButton from "./components/user-info-button/user-info-button";
-import Card from "./components/card/card";
+import Header from "./components/header/header";
 import Greetings from "./components/greetings/greetings";
-
-// @ts-expect-error asda da 
-const tg = window.Telegram.WebApp;
-
-const initialUser: typeof tg.initDataUnsafe.user = {
-  id: 0,
-  first_name: "default name",
-  last_name: "default last name",
-  username: "defaultusername",
-};
+import RandomCatLoaderFeature from "./components/random-cat-loader-feature/random-cat-loader-feature";
 
 function App(): JSX.Element {
-  const [user, setUser] = useState(initialUser);
-  const [points, setPoints] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<{
+    firstName: string;
+    lastName?: string;
+    username?: string;
+    userPhoto?: string;
+  } | null>(null);
 
-  const addPoints = () => setPoints(points + 1);
+  const [themeParams, setThemeParams] = useState({
+    bgColor: "#ffffff",
+    textColor: "#000000",
+  });
 
   useEffect(() => {
-    tg.ready();
+    const Telegram = window.Telegram?.WebApp;
 
-    const handleEvent: EventHandler = () => {
-      const user = tg.initDataUnsafe?.user;
-      if (user) {
-        setUser(user);
-        setIsLoading(false);
+    if (Telegram) {
+      const theme = Telegram.themeParams;
+      setThemeParams({
+        bgColor: theme.bg_color || "#ffffff",
+        textColor: theme.text_color || "#000000",
+      });
+
+      const userData = Telegram.initDataUnsafe?.user;
+      if (userData) {
+        setUser({
+          firstName: userData.first_name,
+          lastName: userData.last_name,
+          username: userData.username,
+        });
+      } else {
+        console.warn("User data is not available");
       }
-    };
-
-    // Подписываемся на событие изменения данных
-    tg.onEvent('viewportChanged', handleEvent);
-
-    // Первоначальная проверка
-    handleEvent();
-
-    // Отписываемся от события при размонтировании
-    return () => {
-      tg.offEvent('viewportChanged', handleEvent);
-    };
+    } else {
+      console.error("Telegram WebApp is not initialized");
+    }
   }, []);
 
-  if (isLoading) {
-    return <div>Загрузка...</div>;
-  }
-
   return (
-    <div>
-      <header className="p-4 bg-gray-800 text-white flex justify-between">
-        <span>Баллы: {points} 💰</span>
-        <button
-          className="bg-yellow-500 text-black px-4 py-2 rounded-lg"
-          onClick={addPoints}
-        >
-          Добавить баллы
-        </button>
-      </header>
-      <Greetings user={user} />
-      <p className="text-gray-600">Добро пожаловать в Mini App для Telegram.</p>
-      <UserInfoButton />
-      <Card />
-    </div>
+    <>
+      {user ? (
+        <>
+          <Header
+            firstName={user.firstName}
+            lastName={user.lastName}
+            username={user.username}
+            themeParams={themeParams}
+          />
+          <main className="p-1">
+            <Greetings
+              firstName={user?.firstName || "user"}
+              lastName={user?.lastName}
+            />
+            <RandomCatLoaderFeature />
+          </main>
+        </>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </>
   );
 }
 
