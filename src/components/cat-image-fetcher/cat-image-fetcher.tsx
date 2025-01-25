@@ -1,30 +1,29 @@
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import "./cat-image-fetcher.css"; // Подключаем CSS для анимаций
-import CatLoader from "../loader/cat-loader"; // Импортируем компонент лоадера
+import "./cat-image-fetcher.css";
+import CatLoader from "../loader/cat-loader";
 
 function CatImageFetcher(): JSX.Element {
-  const [catImages, setCatImages] = useState<string[]>([]); // Массив для хранения загруженных изображений
-  const [currentImage, setCurrentImage] = useState<string>(""); // Текущее изображение
-  const [nextImage, setNextImage] = useState<string>(""); // Следующее изображение
-  const [isLoading, setIsLoading] = useState<boolean>(true); // Состояние загрузки
-  const [isAnimating, setIsAnimating] = useState<boolean>(false); // Состояние анимации
-  const [showClickHint, setShowClickHint] = useState<boolean>(true); // Показывать ли подсказку о клике
+  const [catImages, setCatImages] = useState<string[]>([]);
+  const [currentImage, setCurrentImage] = useState<string>("");
+  const [nextImage, setNextImage] = useState<string>("");
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isFetchingMore, setIsFetchingMore] = useState<boolean>(false);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [showClickHint, setShowClickHint] = useState<boolean>(true);
 
-  // Функция для загрузки случайного изображения котика
   const fetchCatImage = async (): Promise<string | null> => {
     try {
       const response = await axios.get(
         "https://api.thecatapi.com/v1/images/search"
       );
-      return response.data[0].url; // Возвращаем URL изображения
+      return response.data[0].url;
     } catch (error) {
       console.error("Error fetching cat image:", error);
       return null;
     }
   };
 
-  // Функция для предварительной загрузки изображений
   const preloadCatImages = useCallback(async (count: number) => {
     const images: string[] = [];
     for (let i = 0; i < count; i++) {
@@ -33,24 +32,20 @@ function CatImageFetcher(): JSX.Element {
         images.push(imageUrl);
       }
     }
-    setCatImages((prevImages) => [...prevImages, ...images]); // Добавляем новые изображения
-    setIsLoading(false); // Загрузка завершена
+    setCatImages((prevImages) => [...prevImages, ...images]);
   }, []);
 
-  // Загрузка первых 5 изображений при монтировании компонента
   useEffect(() => {
-    preloadCatImages(5); // Предварительно загружаем 5 изображений
-  }, [preloadCatImages]); // Добавляем preloadCatImages в зависимости
+    preloadCatImages(5);
+  }, [preloadCatImages]);
 
-  // Автоматическая подгрузка новых изображений, когда остается мало
   useEffect(() => {
-    if (catImages.length < 4 && !isLoading) {
-      setIsLoading(true);
-      preloadCatImages(5); // Подгружаем еще 5
+    if (catImages.length < 4 && !isFetchingMore) {
+      setIsFetchingMore(true);
+      preloadCatImages(5).then(() => setIsFetchingMore(false));
     }
-  }, [catImages.length, isLoading, preloadCatImages]); // Добавляем preloadCatImages в зависимости
+  }, [catImages.length, isFetchingMore, preloadCatImages]);
 
-  // Устанавливаем текущее и следующее изображение при изменении catImages
   useEffect(() => {
     if (catImages.length > 0) {
       setCurrentImage(catImages[0]);
@@ -60,24 +55,19 @@ function CatImageFetcher(): JSX.Element {
     }
   }, [catImages]);
 
-  // Обработчик клика для показа следующего изображения
   const handleClick = async () => {
-    if (catImages.length === 0) return; // Если изображений нет, ничего не делаем
+    if (catImages.length === 0) return;
 
-    // Скрываем подсказку о клике после первого клика
     if (showClickHint) {
       setShowClickHint(false);
     }
 
-    // Запускаем анимацию
     setIsAnimating(true);
 
-    // Ждем завершения анимации (0.5 секунды)
     setTimeout(() => {
-      // Удаляем первое изображение из массива (оно уже показано)
       setCatImages((prevImages) => prevImages.slice(1));
-      setIsAnimating(false); // Завершаем анимацию
-    }, 500); // Длительность анимации
+      setIsAnimating(false);
+    }, 500);
   };
 
   return (
@@ -89,11 +79,10 @@ function CatImageFetcher(): JSX.Element {
         Paw for cats
       </div>
       <div className="flex-grow flex justify-center items-center relative">
-        {isLoading || catImages.length === 0 ? (
+        {catImages.length === 0 ? (
           <CatLoader />
         ) : (
           <>
-            {/* Текущее изображение (затухает) */}
             {currentImage && (
               <img
                 src={currentImage}
@@ -103,7 +92,6 @@ function CatImageFetcher(): JSX.Element {
                 }`}
               />
             )}
-            {/* Следующее изображение (появляется) */}
             {nextImage && (
               <img
                 src={nextImage}
@@ -116,7 +104,11 @@ function CatImageFetcher(): JSX.Element {
           </>
         )}
       </div>
-      {/* Подсказка о клике (иконка руки) */}
+      {isFetchingMore && catImages.length !== 0 && (
+        <div className="absolute bottom-2 right-2 p-1 bg-gray-200 rounded-full">
+          <CatLoader small />
+        </div>
+      )}
       {showClickHint && (
         <div className="absolute bottom-10 right-4 transform -translate-x-1/2 -translate-y-1/2 click-hint text-5xl">
           <span className=" custom-rotate-15">👆</span>
