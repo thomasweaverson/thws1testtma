@@ -11,7 +11,7 @@ function CatLoader( { small }: CatLoaderProps): JSX.Element {
       <Lottie
         animationData={lottieLoaderAnimation} // Передаем анимацию
         loop={true} // Анимация будет повторяться
-        style={{ width: small ? 100 : 200, height: small ? 100 : 200 }} // Размер анимации
+        style={{ width: small ? 50 : 200, height: small ? 50 : 200 }} // Размер анимации
       />
     </div>
   );
