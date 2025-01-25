@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "./components/header/header";
 import Greetings from "./components/greetings/greetings";
-import RandomCatLoaderFeature from "./components/random-cat-loader-feature/random-cat-loader-feature";
+import RandomCatLoaderFeature from "./components/cat-image-fetcher/cat-image-fetcher";
 
 function App(): JSX.Element {
   const [user, setUser] = useState<{

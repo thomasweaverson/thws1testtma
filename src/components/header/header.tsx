@@ -28,7 +28,7 @@ function Header({ firstName, lastName, username, themeParams }: HeaderProps) {
             className="w-full h-full rounded-full object-cover"
           />
         </div>
-        <h1 className="text-xl font-bold text-yellow-950">{appName}</h1>
+        <h1 className="text-xl font-bold">{appName}</h1>
       </div>
 
       {/* Данные пользователя */}
