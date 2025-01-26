@@ -68,6 +68,14 @@ export interface TelegramWebApp {
     callback: (location: Location) => void,
     errorCallback?: (error: LocationError) => void
   ) => void;
+
+  LocationManager: {
+    init: () => void;
+    isInited: boolean,
+    isLocationAvailable: boolean,
+    isAccessRequested: boolean,
+    isAccessGranted: boolean,
+  }
 }
 
 export interface TelegramEventMap {

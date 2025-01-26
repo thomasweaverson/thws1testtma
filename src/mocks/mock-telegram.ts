@@ -73,5 +73,13 @@ export const mockTelegram: { WebApp: TelegramWebApp } = {
         }
       }, 500);
     },
+
+    LocationManager: {
+      init: () => console.log('LocationManager initialized'),
+      isInited: false,
+      isLocationAvailable: false,
+      isAccessRequested: false,
+      isAccessGranted: false,
+    },
   },
 };

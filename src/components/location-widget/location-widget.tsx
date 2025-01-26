@@ -10,7 +10,9 @@ const LocationWidget = () => {
   const [error, setError] = useState<string | null>(null);
   const [debugInfo, setDebugInfo] = useState<string>("");
   //!
-  const [tgObj, setTgObj] = useState<string | null>(null);
+  const [tgWebAppLocationManagerObj, setTgWebAppLocationManagerObj] = useState<
+    string | null
+  >(null);
 
   // Добавляем проверку инициализации Telegram WebApp
   useEffect(() => {
@@ -25,7 +27,12 @@ const LocationWidget = () => {
     }
 
     setDebugInfo(initInfo);
-    setTgObj(JSON.stringify(window.Telegram));
+    setTgWebAppLocationManagerObj(
+      JSON.stringify(window.Telegram?.WebApp.LocationManager)
+    );
+    if (window.Telegram?.WebApp.LocationManager) {
+      window.Telegram.WebApp.LocationManager.init();
+    }
   }, []);
 
   const handleGetLocation = () => {
@@ -98,7 +105,8 @@ const LocationWidget = () => {
 
       <div className="mt-4 p-3 bg-gray-50 rounded-md">
         <p className="text-gray-700">
-          Telegram WebApp API: <span className="font-mono">{tgObj}</span>
+          Telegram WebApp API, tgWebAppLocationManagerObj:{" "}
+          <span className="font-mono">{tgWebAppLocationManagerObj}</span>
         </p>
       </div>
     </div>
