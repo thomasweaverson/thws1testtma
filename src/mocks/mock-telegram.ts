@@ -10,6 +10,7 @@ export const mockTelegram: { WebApp: TelegramWebApp } = {
         first_name: "Morris",
         last_name: "Mocker",
         username: "mockuser",
+        photo_url: "/img/user_mock_avatar.png",
         language_code: "en",
       },
     },

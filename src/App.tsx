@@ -32,6 +32,7 @@ function App(): JSX.Element {
           firstName: userData.first_name,
           lastName: userData.last_name,
           username: userData.username,
+          userPhoto: userData.photo_url,
         });
       } else {
         console.warn("User data is not available");
@@ -49,6 +50,7 @@ function App(): JSX.Element {
             firstName={user.firstName}
             lastName={user.lastName}
             username={user.username}
+            photoUrl={user.userPhoto}
             themeParams={themeParams}
           />
           <main className="p-1">

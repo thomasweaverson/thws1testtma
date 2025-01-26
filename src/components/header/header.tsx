@@ -2,13 +2,20 @@ interface HeaderProps {
   firstName: string;
   lastName?: string;
   username?: string;
+  photoUrl?: string;
   themeParams: {
     bgColor: string;
     textColor: string;
   };
 }
 
-function Header({ firstName, lastName, username, themeParams }: HeaderProps) {
+function Header({
+  firstName,
+  lastName,
+  username,
+  photoUrl,
+  themeParams,
+}: HeaderProps) {
   const appName = "PURR🐾";
 
   return (
@@ -41,11 +48,21 @@ function Header({ firstName, lastName, username, themeParams }: HeaderProps) {
         </div>
 
         <div
-          className="h-12 w-12 flex items-center justify-center bg-gray-200 text-gray-600 rounded-full border border-gray-300"
-          style={{ backgroundColor: themeParams.bgColor || "#f0f0f0" }}
-        >
-          {firstName[0].toUpperCase()}
-        </div>
+  className="h-12 w-12 flex items-center justify-center bg-gray-200 text-gray-600 rounded-full border border-gray-300 overflow-hidden"
+  style={{ backgroundColor: themeParams.bgColor || "#f0f0f0" }}
+>
+  {photoUrl ? (
+    <img
+      src={photoUrl}
+      alt={`${firstName} avatar`}
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    <span className="text-lg font-semibold">
+      {firstName[0].toUpperCase()}
+    </span>
+  )}
+</div>
       </div>
     </header>
   );
