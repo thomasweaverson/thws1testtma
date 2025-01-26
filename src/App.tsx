@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "./components/header/header";
 import Greetings from "./components/greetings/greetings";
 import RandomCatLoaderFeature from "./components/cat-image-fetcher/cat-image-fetcher";
-import LocationWidget from "./location-widget/location-widget";
+import LocationWidget from "./components/location-widget/location-widget";
 
 function App(): JSX.Element {
   const [user, setUser] = useState<{
