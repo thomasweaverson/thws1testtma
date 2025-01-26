@@ -7,6 +7,15 @@ export interface TelegramUser {
   language_code: string;
 }
 
+export interface Location {
+  latitude: number;
+  longitude: number;
+}
+
+export interface LocationError {
+  error_message: string;
+}
+
 export interface TelegramWebApp {
   initData: string;
   initDataUnsafe: {
@@ -53,6 +62,11 @@ export interface TelegramWebApp {
   showPopup: (
     params: PopupParams,
     callback?: (buttonId: string) => void
+  ) => void;
+
+  requestLocation: (
+    callback: (location: Location) => void,
+    errorCallback?: (error: LocationError) => void
   ) => void;
 }
 

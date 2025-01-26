@@ -56,5 +56,22 @@ export const mockTelegram: { WebApp: TelegramWebApp } = {
       console.log(`Event listener removed for: ${eventType}`),
     showPopup: (params) =>
       console.log("Popup shown with params:", params),
+
+    requestLocation: (successCallback, errorCallback) => {
+      const shouldFail = Math.random() < 0.2; // 20% chance to fail
+
+      setTimeout(() => {
+        if (shouldFail && errorCallback) {
+          errorCallback({
+            error_message: 'User denied location access'
+          });
+        } else {
+          successCallback({
+            latitude: 55.755825 + Math.random() * 0.01,
+            longitude: 37.617298 + Math.random() * 0.01
+          });
+        }
+      }, 500);
+    },
   },
 };
