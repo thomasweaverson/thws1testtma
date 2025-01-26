@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 type Location = {
   latitude: number;
@@ -8,52 +8,57 @@ type Location = {
 const LocationWidget = () => {
   const [location, setLocation] = useState<Location | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [debugInfo, setDebugInfo] = useState<string>('');
+  const [debugInfo, setDebugInfo] = useState<string>("");
+  //!
+  const [tgObj, setTgObj] = useState<string | null>(null);
 
   // Добавляем проверку инициализации Telegram WebApp
   useEffect(() => {
-    let initInfo = 'Telegram WebApp: ';
-    
+    let initInfo = "Telegram WebApp: ";
+
     if (window.Telegram?.WebApp) {
       initInfo += `версия ${window.Telegram.WebApp.version}, `;
       initInfo += `платформа ${window.Telegram.WebApp.platform}, `;
       initInfo += `инициализирован: ${!!window.Telegram.WebApp.initData}`;
     } else {
-      initInfo += 'не обнаружен';
+      initInfo += "не обнаружен";
     }
-    
+
     setDebugInfo(initInfo);
+    setTgObj(JSON.stringify(window.Telegram));
   }, []);
 
   const handleGetLocation = () => {
     setError(null);
     setLocation(null);
-    setDebugInfo(prev => prev + '\n\nНачало запроса геолокации...');
+    setDebugInfo((prev) => prev + "\n\nНачало запроса геолокации...");
 
     if (!window.Telegram?.WebApp) {
-      setError('Функция доступна только в Telegram');
-      setDebugInfo(prev => prev + '\nОшибка: Telegram WebApp API не обнаружен');
+      setError("Функция доступна только в Telegram");
+      setDebugInfo(
+        (prev) => prev + "\nОшибка: Telegram WebApp API не обнаружен"
+      );
       return;
     }
 
     try {
       window.Telegram.WebApp.requestLocation(
         (geo) => {
-          setDebugInfo(prev => prev + '\nГеолокация получена успешно');
+          setDebugInfo((prev) => prev + "\nГеолокация получена успешно");
           setLocation({
             latitude: geo.latitude,
             longitude: geo.longitude,
           });
         },
         (err) => {
-          const errorMsg = err?.error_message || 'Неизвестная ошибка';
-          setDebugInfo(prev => prev + `\nОшибка: ${errorMsg}`);
+          const errorMsg = err?.error_message || "Неизвестная ошибка";
+          setDebugInfo((prev) => prev + `\nОшибка: ${errorMsg}`);
           setError(`Ошибка: ${errorMsg}`);
         }
       );
     } catch (e) {
-      const error = e instanceof Error ? e.message : 'Неизвестная ошибка';
-      setDebugInfo(prev => prev + `\nИсключение: ${error}`);
+      const error = e instanceof Error ? e.message : "Неизвестная ошибка";
+      setDebugInfo((prev) => prev + `\nИсключение: ${error}`);
       setError(`Системная ошибка: ${error}`);
     }
   };
@@ -75,10 +80,12 @@ const LocationWidget = () => {
       {location && (
         <div className="mt-4 p-3 bg-gray-50 rounded-md">
           <p className="text-gray-700">
-            Широта: <span className="font-mono">{location.latitude.toFixed(6)}</span>
+            Широта:{" "}
+            <span className="font-mono">{location.latitude.toFixed(6)}</span>
           </p>
           <p className="text-gray-700 mt-1">
-            Долгота: <span className="font-mono">{location.longitude.toFixed(6)}</span>
+            Долгота:{" "}
+            <span className="font-mono">{location.longitude.toFixed(6)}</span>
           </p>
         </div>
       )}
@@ -88,6 +95,12 @@ const LocationWidget = () => {
           <p className="text-red-600">{error}</p>
         </div>
       )}
+
+      <div className="mt-4 p-3 bg-gray-50 rounded-md">
+        <p className="text-gray-700">
+          Telegram WebApp API: <span className="font-mono">{tgObj}</span>
+        </p>
+      </div>
     </div>
   );
 };
