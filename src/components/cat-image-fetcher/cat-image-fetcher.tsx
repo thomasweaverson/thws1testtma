@@ -7,7 +7,6 @@ function CatImageFetcher(): JSX.Element {
   const [catImages, setCatImages] = useState<string[]>([]);
   const [currentImage, setCurrentImage] = useState<string>("");
   const [nextImage, setNextImage] = useState<string>("");
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isFetchingMore, setIsFetchingMore] = useState<boolean>(false);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [showClickHint, setShowClickHint] = useState<boolean>(true);

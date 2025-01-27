@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "./components/header/header";
 import Greetings from "./components/greetings/greetings";
-import RandomCatLoaderFeature from "./components/cat-image-fetcher/cat-image-fetcher";
+import CatImageFetcher from "./components/cat-image-fetcher/cat-image-fetcher";
 import LocationWidget from "./components/location-widget/location-widget";
 
 function App(): JSX.Element {
@@ -59,7 +59,7 @@ function App(): JSX.Element {
               firstName={user?.firstName || "user"}
               lastName={user?.lastName}
             />
-            <RandomCatLoaderFeature />
+            <CatImageFetcher />
             <LocationWidget />
           </main>
         </>
