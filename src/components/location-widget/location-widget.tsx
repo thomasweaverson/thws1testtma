@@ -72,7 +72,7 @@ function LocationWidget(): JSX.Element {
   };
 
   const fetchWeather = async (coords: Location): Promise<void> => {
-    const apiKey = process.env.OPEN_WEATHER_MAP_API_KEY;
+    const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${coords.latitude}&lon=${coords.longitude}&appid=${apiKey}&units=metric`;
     const response = await axios.get(url);
     setWeatherData(response.data);
