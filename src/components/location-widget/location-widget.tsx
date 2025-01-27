@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { LocationData } from "../../types/Telegram";
-import { WeatherData } from "../../types/weather-data";
+import { WeatherData } from "../../types/weather-data.ts";
 import axios from "axios";
 
 type Location = {
