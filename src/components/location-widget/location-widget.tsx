@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
+import { LocationData } from "../../types/Telegram";
 
 type Location = {
   latitude: number;
   longitude: number;
 };
 
-const LocationWidget = () => {
+function LocationWidget(): JSX.Element {
   const [location, setLocation] = useState<Location | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [debugInfo, setDebugInfo] = useState<string>("");
   //!
+  const [locationManagerInited, setLocationManagerInited] = useState(false);
   const [tgWebAppLocationManagerObj, setTgWebAppLocationManagerObj] = useState<
     string | null
   >(null);
@@ -30,43 +32,33 @@ const LocationWidget = () => {
     setTgWebAppLocationManagerObj(
       JSON.stringify(window.Telegram?.WebApp.LocationManager)
     );
-    if (window.Telegram?.WebApp.LocationManager) {
-      window.Telegram.WebApp.LocationManager.init();
+    if (window.Telegram?.WebApp.LocationManager && !locationManagerInited) {
+      window.Telegram.WebApp.LocationManager.init(() => {
+        setLocationManagerInited(true);
+      });
     }
-  }, []);
+  }, [locationManagerInited]);
 
   const handleGetLocation = () => {
     setError(null);
     setLocation(null);
     setDebugInfo((prev) => prev + "\n\nНачало запроса геолокации...");
-
-    if (!window.Telegram?.WebApp) {
-      setError("Функция доступна только в Telegram");
-      setDebugInfo(
-        (prev) => prev + "\nОшибка: Telegram WebApp API не обнаружен"
-      );
-      return;
-    }
-
     try {
-      window.Telegram.WebApp.requestLocation(
-        (geo) => {
-          setDebugInfo((prev) => prev + "\nГеолокация получена успешно");
-          setLocation({
-            latitude: geo.latitude,
-            longitude: geo.longitude,
-          });
-        },
-        (err) => {
-          const errorMsg = err?.error_message || "Неизвестная ошибка";
-          setDebugInfo((prev) => prev + `\nОшибка: ${errorMsg}`);
-          setError(`Ошибка: ${errorMsg}`);
+    if (locationManagerInited) {
+      
+      window.Telegram?.WebApp.LocationManager.getLocation(
+        (arg: null | LocationData) => {
+          if (arg) {
+            setDebugInfo(
+              (prev) => prev + "\nПолучены координаты: " + JSON.stringify(arg)
+            );
+          } else {
+            setDebugInfo((prev) => prev + "\ngetLocation вернул null");
+          }
         }
-      );
-    } catch (e) {
-      const error = e instanceof Error ? e.message : "Неизвестная ошибка";
-      setDebugInfo((prev) => prev + `\nИсключение: ${error}`);
-      setError(`Системная ошибка: ${error}`);
+      )};
+    } catch (error) {
+      setDebugInfo((prev) => prev + "\nОшибка: " + error);
     }
   };
 
@@ -111,6 +103,6 @@ const LocationWidget = () => {
       </div>
     </div>
   );
-};
+}
 
 export default LocationWidget;

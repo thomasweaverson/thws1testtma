@@ -7,7 +7,7 @@ export interface TelegramUser {
   language_code: string;
 }
 
-export interface Location {
+export interface LocationData {
   latitude: number;
   longitude: number;
 }
@@ -64,17 +64,13 @@ export interface TelegramWebApp {
     callback?: (buttonId: string) => void
   ) => void;
 
-  requestLocation: (
-    callback: (location: Location) => void,
-    errorCallback?: (error: LocationError) => void
-  ) => void;
-
   LocationManager: {
-    init: () => void;
+    init: (callback?: () => void) => void;
     isInited: boolean,
     isLocationAvailable: boolean,
     isAccessRequested: boolean,
     isAccessGranted: boolean,
+    getLocation: (callback: (location: LocationData | null) => void) => void
   }
 }
 
