@@ -50,22 +50,28 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
         console.warn("User data is not available");
       }
   
-      // Проверяем наличие catPoints в хранилище Telegram
-      const storedCatPoints = Telegram.CloudStorage.getItem("catPoints");
+      // Асинхронная загрузка catPoints
+      const loadCatPoints = async () => {
+        try {
+          const storedCatPoints = await Telegram.CloudStorage.getItem("catPoints");
+          if (storedCatPoints && !isNaN(Number(storedCatPoints))) {
+            setCatPoints(Number(storedCatPoints));
+          } else {
+            await Telegram.CloudStorage.setItem("catPoints", "1");
+            setCatPoints(1);
+          }
+        } catch (error) {
+          console.error("Error loading catPoints:", error);
+          setCatPoints(1); // Устанавливаем значение по умолчанию в случае ошибки
+        }
+      };
   
-      // Проверяем, что storedCatPoints существует и является корректной строкой
-      if (storedCatPoints && !isNaN(Number(storedCatPoints))) {
-        setCatPoints(Number(storedCatPoints));
-      } else {
-        // Если catPoints нет или значение некорректно, инициализируем его значением 1
-        Telegram.CloudStorage.setItem("catPoints", "1");
-        setCatPoints(1);
-      }
+      loadCatPoints();
     } else {
       console.error("Telegram WebApp is not initialized");
     }
   }, []);
-
+  
   const incrementCatPoints = () => {
     setCatPoints((prevPoints) => {
       const newPoints = prevPoints + 1;
