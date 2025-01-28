@@ -1,6 +1,34 @@
-/* Анимация fade-in */
+@tailwind utilities;
+
+@layer utilities {
+  .-rotate-25 {
+    transform: rotate(-25deg);
+  }
+}
+
+/* Контейнер */
+.cat-image-container {
+  @apply mt-2 w-full h-[80vh] max-h-[600px] bg-white shadow-md rounded-lg overflow-hidden 
+         flex flex-col cursor-pointer relative;
+}
+
+/* Область изображения */
+.image-wrapper {
+  @apply flex-grow flex justify-center items-center relative;
+}
+
+/* Базовые стили изображения */
+.cat-image {
+  @apply w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-500;
+}
+
+/* Анимации */
 .fade-in {
   animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.5s ease-in-out forwards;
 }
 
 @keyframes fadeIn {
@@ -12,11 +40,6 @@
   }
 }
 
-/* Анимация fade-out */
-.fade-out {
-  animation: fadeOut 0.5s ease-in-out forwards;
-}
-
 @keyframes fadeOut {
   from {
     opacity: 1;
@@ -26,12 +49,28 @@
   }
 }
 
-
-/* Анимация для подсказки о клике */
-.click-hint {
-  animation: bounce 1.5s infinite;
+/* Водяной знак */
+.watermark {
+  @apply absolute bottom-0 left-0 w-full text-center text-sm text-gray-950 p-1 
+        bg-white bg-opacity-40 z-10;
 }
 
+/* Индикатор загрузки */
+.loader-indicator {
+  @apply absolute bottom-2 right-2 p-1 bg-gray-200 rounded-full;
+}
+
+/* Подсказка клика */
+.click-hint {
+  @apply absolute bottom-10 right-4 transform -translate-x-1/2 -translate-y-1/2 
+        text-5xl animate-bounce;
+}
+
+.animated-emoji {
+  @apply inline-block transform -rotate-25;
+}
+
+/* Анимация подсказки */
 @keyframes bounce {
   0%,
   100% {
@@ -40,9 +79,4 @@
   50% {
     transform: translate(-50%, -50%) scale(1.2);
   }
-}
-
-.custom-rotate-15 {
-  display: inline-block;
-  transform: rotate(-25deg);
 }
