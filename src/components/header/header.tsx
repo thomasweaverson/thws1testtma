@@ -21,13 +21,13 @@ function Header(): JSX.Element {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full flex items-center justify-between px-4 py-3 shadow-md bg-opacity-90 backdrop-blur-sm z-50" 
+    <header className=" w-full flex items-center justify-between px-2 py-2 shadow-md bg-opacity-90" 
             style={{
               backgroundColor: themeParams.bgColor || "#ffffff",
               color: themeParams.textColor || "#000000",
             }}>
       {/* Название приложения */}
-      <h1 className="text-2xl font-bold tracking-tight">
+      <h1 className="text-lg font-bold tracking-tight">
         <span className="text-purple-600">{appName.split('🐾')[0]}</span>
         <span className="ml-1">🐾</span>
       </h1>
@@ -46,14 +46,14 @@ function Header(): JSX.Element {
             className="w-6 h-6 mr-2"
           />
           <span className="font-medium" style={{ color: themeParams.textColor }}>
-            {catPoints ? catPoints : "=^$.$^="}
+            {catPoints ? catPoints : "88"}
           </span>
         </div>
 
         {/* Информация о пользователе */}
         <div className="flex items-center gap-3">
           <div className="text-right">
-            <p className="font-medium text-sm leading-tight">
+            <p className="font-medium text-xs leading-tight">
               {user?.first_name} {user?.last_name}
             </p>
             {user?.username && (

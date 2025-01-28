@@ -7,9 +7,26 @@
 }
 
 /* Контейнер */
+/* .cat-image-container {
+  @apply flex-1 overflow-y-auto h-[calc(100vw-0.5rem)] w-full box-border bg-white shadow-md rounded-lg overflow-hidden 
+        flex flex-col cursor-pointer;
+} */
+
 .cat-image-container {
-  @apply fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2  w-full box-border h-[100vw] bg-white shadow-md rounded-lg overflow-hidden 
-        flex flex-col cursor-pointer z-10;
+  @apply flex-1 overflow-y-auto w-full box-border bg-white shadow-md rounded-lg overflow-hidden 
+        flex flex-col cursor-pointer;
+
+  /* Высота для портретного режима */
+  @media (orientation: portrait) {
+    height: calc(100vw - 0.5rem);
+  }
+
+  /* Высота для ландшафтного режима */
+  @media (orientation: landscape) {
+    height: 70vh; /* или задайте фиксированную высоту, если нужно */
+    max-width: 70vh;
+    margin: 0 auto;
+  }
 }
 
 /* Область изображения */
@@ -53,6 +70,13 @@
 .watermark {
   @apply absolute bottom-0 left-0 w-full text-center text-sm text-gray-950 p-1 
         bg-white bg-opacity-40 z-10;
+
+  /* Высота для портретного режима */
+
+  /* Высота для ландшафтного режима */
+  @media (orientation: landscape) {
+    display: none;
+  }
 }
 
 /* Индикатор загрузки */
@@ -64,6 +88,9 @@
 .click-hint {
   @apply absolute bottom-10 right-4 transform -translate-x-1/2 -translate-y-1/2 
         text-5xl animate-bounce;
+  @media (orientation: landscape) {
+    right: 30%;
+  }
 }
 
 .animated-emoji {

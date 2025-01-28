@@ -21,7 +21,9 @@ function CatImageFetcher(): JSX.Element {
 
   const fetchCatImage = useCallback(async (): Promise<string | null> => {
     try {
-      const response = await axios.get("https://api.thecatapi.com/v1/images/search");
+      const response = await axios.get(
+        "https://api.thecatapi.com/v1/images/search"
+      );
       return response.data[0].url;
     } catch (error) {
       console.error("Error fetching cat image:", error);
@@ -29,13 +31,16 @@ function CatImageFetcher(): JSX.Element {
     }
   }, []);
 
-  const preloadCatImages = useCallback(async (count: number) => {
-    const requests = Array.from({ length: count }, () => fetchCatImage());
-    const results = await Promise.all(requests);
-    const newImages = results.filter((url): url is string => Boolean(url));
+  const preloadCatImages = useCallback(
+    async (count: number) => {
+      const requests = Array.from({ length: count }, () => fetchCatImage());
+      const results = await Promise.all(requests);
+      const newImages = results.filter((url): url is string => Boolean(url));
 
-    setCatImages(prev => [...prev, ...newImages]);
-  }, [fetchCatImage]);
+      setCatImages((prev) => [...prev, ...newImages]);
+    },
+    [fetchCatImage]
+  );
 
   const updateDisplayImages = useCallback(() => {
     if (catImages.length > 0) {
@@ -56,7 +61,7 @@ function CatImageFetcher(): JSX.Element {
       if (elapsedTime < animationDuration) {
         requestAnimationFrame(step);
       } else {
-        setCatImages(prev => {
+        setCatImages((prev) => {
           const newImages = prev.slice(1);
           updateDisplayImages(); // Ensure display images are updated
           return newImages;
@@ -80,7 +85,9 @@ function CatImageFetcher(): JSX.Element {
   useEffect(() => {
     if (catImages.length < PRELOAD_THRESHOLD && !isFetchingMore) {
       setIsFetchingMore(true);
-      preloadCatImages(PRELOAD_BATCH_SIZE).finally(() => setIsFetchingMore(false));
+      preloadCatImages(PRELOAD_BATCH_SIZE).finally(() =>
+        setIsFetchingMore(false)
+      );
     }
   }, [catImages.length, isFetchingMore, preloadCatImages]);
 
@@ -94,45 +101,45 @@ function CatImageFetcher(): JSX.Element {
   };
 
   return (
-    <div
-      onClick={handleClick}
-      className="cat-image-container"
-      role="button"
-      aria-label="View next cat"
-    >
-      {showClickHint && <div className="watermark">
-        Paw for cats
-      </div>}
-      <div className="image-wrapper">
-        {!catImages.length ? (
-          <CatLoader />
-        ) : (
-          <>
-            <ImageWithAnimation
-              src={currentImage}
-              animationClass={isAnimating ? "fade-out" : ""}
-            />
-            <ImageWithAnimation
-              src={nextImage}
-              animationClass={isAnimating ? "fade-in" : "opacity-0"}
-            />
-          </>
-        )}
-      </div>
-      {isFetchingMore && (
-        <div className="loader-indicator">
-          <CatLoader small />
+    <section className="mx-1 flex items-center relative">
+      <div
+        onClick={handleClick}
+        className="cat-image-container"
+        role="button"
+        aria-label="View next cat"
+      >
+        {showClickHint && <div className="watermark">Paw for cats</div>}
+        <div className="image-wrapper">
+          {!catImages.length ? (
+            <CatLoader />
+          ) : (
+            <>
+              <ImageWithAnimation
+                src={currentImage}
+                animationClass={isAnimating ? "fade-out" : ""}
+              />
+              <ImageWithAnimation
+                src={nextImage}
+                animationClass={isAnimating ? "fade-in" : "opacity-0"}
+              />
+            </>
+          )}
         </div>
-      )}
-      {showClickHint && <ClickHint />}
-    </div>
+        {isFetchingMore && (
+          <div className="loader-indicator">
+            <CatLoader small />
+          </div>
+        )}
+        {showClickHint && <ClickHint />}
+      </div>
+    </section>
   );
 }
 
 // Вспомогательные компоненты
 const ImageWithAnimation = ({
   src,
-  animationClass
+  animationClass,
 }: {
   src: string;
   animationClass: string;

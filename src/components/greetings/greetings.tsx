@@ -14,8 +14,8 @@ function Greetings(): JSX.Element | null {
   }
 
   return (
-    <section
-      className={`fixed bottom-0 left-0 right-0 bg-slate-50 shadow-md p-3 flex items-center justify-between gap-2 transition-opacity duration-500 z-50 ${
+    <article
+      className={`fixed bottom-0 left-0 right-0 bg-slate-50 shadow-md p-3  flex items-center justify-between gap-2 transition-opacity duration-500 z-50 ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
     >
@@ -48,7 +48,7 @@ function Greetings(): JSX.Element | null {
           This app is made just for fun. Paw-paw! 🐾
         </p>
       </div>
-    </section>
+    </article>
   );
 }
 
