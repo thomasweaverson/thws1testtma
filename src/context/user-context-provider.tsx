@@ -56,12 +56,12 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
       const loadCatPoints = async () => {
         try {
           const storedCatPoints = await Telegram.CloudStorage.getItem("catPoints");
-          setDebugErrors((prevErrors) => [...prevErrors, `Stored catPoints: ${storedCatPoints}`]);
+          setDebugErrors((prevErrors) => [...prevErrors, `Stored catPoints: ${JSON.stringify(storedCatPoints)}; Type: ${typeof storedCatPoints}`]);
           if (storedCatPoints && !isNaN(Number(storedCatPoints))) {
             setCatPoints(Number(storedCatPoints));
           } else {
             const initialSetToCloud = await Telegram.CloudStorage.setItem("catPoints", "1");
-            setDebugErrors((prevErrors) => [...prevErrors, `initialSetToCloud: ${initialSetToCloud}`]);
+            setDebugErrors((prevErrors) => [...prevErrors, `initialSetToCloud: ${JSON.stringify(initialSetToCloud)}; Type: ${typeof initialSetToCloud}`]);
             setCatPoints(1);
           }
         } catch (error) {
@@ -86,7 +86,7 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
         "catPoints",
         newPoints.toString()
       );
-      setDebugErrors((prevErrors) => [...prevErrors, `fetchedIncrement: ${fetchedIncrement}`]);
+      setDebugErrors((prevErrors) => [...prevErrors, `fetchedIncrement: ${JSON.stringify(fetchedIncrement)}; Type: ${typeof fetchedIncrement}`]);
       return newPoints;
     });
   };
