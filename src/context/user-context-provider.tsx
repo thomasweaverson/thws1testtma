@@ -12,6 +12,7 @@ export interface UserContextType {
   themeParams: ThemeParams;
   catPoints: number;
   incrementCatPoints: () => void;
+  debugErrors: string[];
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -25,6 +26,7 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
     textColor: "#000000",
   });
   const [catPoints, setCatPoints] = useState<number>(1);
+  const [debugErrors, setDebugErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const Telegram = window.Telegram?.WebApp;
@@ -54,14 +56,17 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
       const loadCatPoints = async () => {
         try {
           const storedCatPoints = await Telegram.CloudStorage.getItem("catPoints");
+          setDebugErrors((prevErrors) => [...prevErrors, `Stored catPoints: ${storedCatPoints}`]);
           if (storedCatPoints && !isNaN(Number(storedCatPoints))) {
             setCatPoints(Number(storedCatPoints));
           } else {
-            await Telegram.CloudStorage.setItem("catPoints", "1");
+            const initialSetToCloud = await Telegram.CloudStorage.setItem("catPoints", "1");
+            setDebugErrors((prevErrors) => [...prevErrors, `initialSetToCloud: ${initialSetToCloud}`]);
             setCatPoints(1);
           }
         } catch (error) {
           console.error("Error loading catPoints:", error);
+          setDebugErrors((prevErrors) => [...prevErrors, `Error loading catPoints: ${error}`]);
           setCatPoints(1); // Устанавливаем значение по умолчанию в случае ошибки
         }
       };
@@ -71,21 +76,23 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("Telegram WebApp is not initialized");
     }
   }, []);
-  
+
   const incrementCatPoints = () => {
     setCatPoints((prevPoints) => {
       const newPoints = prevPoints + 1;
+      setDebugErrors((prevErrors) => [...prevErrors, `incrementCatPoints: ${newPoints}`]);
       // Обновляем значение в хранилище Telegram
-      window.Telegram?.WebApp.CloudStorage.setItem(
+      const fetchedIncrement = window.Telegram?.WebApp.CloudStorage.setItem(
         "catPoints",
         newPoints.toString()
       );
+      setDebugErrors((prevErrors) => [...prevErrors, `fetchedIncrement: ${fetchedIncrement}`]);
       return newPoints;
     });
   };
 
   return (
-    <UserContext.Provider value={{ user, themeParams, catPoints, incrementCatPoints }}>
+    <UserContext.Provider value={{ user, themeParams, catPoints, incrementCatPoints, debugErrors }}>
       {children}
     </UserContext.Provider>
   );
