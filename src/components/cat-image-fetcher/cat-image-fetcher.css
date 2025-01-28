@@ -8,8 +8,8 @@
 
 /* Контейнер */
 .cat-image-container {
-  @apply mt-2 w-full h-[80vh] max-h-[600px] bg-white shadow-md rounded-lg overflow-hidden 
-         flex flex-col cursor-pointer relative;
+  @apply fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2  w-full box-border h-[100vw] bg-white shadow-md rounded-lg overflow-hidden 
+        flex flex-col cursor-pointer z-10;
 }
 
 /* Область изображения */

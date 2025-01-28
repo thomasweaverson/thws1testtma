@@ -7,13 +7,10 @@ function App(): JSX.Element {
   return (
     <UserContextProvider>
       <Header />
-      <main className="h-screen flex flex-col justify-center items-center p-1 relative">
-        <div className="absolute top-0 left-0 w-full h-[60px]"></div>{" "}
-        {/* Занимает место для Header */}
-        <Greetings />
-        <CatImageFetcher />
-      </main>
-      <footer className="p-1">@thws 2025</footer>
+      <Greetings />
+      <CatImageFetcher />
+
+      <footer className="p-1 fixed bottom-0 right-0">@thws 2025</footer>
     </UserContextProvider>
   );
 }
