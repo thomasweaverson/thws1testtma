@@ -74,6 +74,7 @@ export interface TelegramWebApp {
   };
 
   CloudStorage: {
+    getKeys: (cb: (error: Error | null, keys?: string[]) => void) => void;
     getItem: (key: string, cb: (error: Error, value: string | null) => void) => string | null;
     setItem: (key: string, value: string, cb?: (error: Error, isSuccess: boolean) => void) => void;
     removeItem?: (key: string) => void; // Опциональный метод
