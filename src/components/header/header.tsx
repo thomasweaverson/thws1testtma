@@ -1,25 +1,31 @@
 import { useUserContext } from "../../context/use-user-context";
+import { useEffect, useState } from "react";
 
 function Header(): JSX.Element {
   const { user, themeParams, catPoints, initStorage } = useUserContext();
   const appName = "PURR🐾";
 
-  const needReinitTelegramStorage = catPoints === null;
+  const [isStorageInitialized, setIsStorageInitialized] = useState(catPoints !== null);
+
+  useEffect(() => {
+    if (!isStorageInitialized) {
+      initStorage().then(() => setIsStorageInitialized(true));
+    }
+  }, [isStorageInitialized, initStorage]);
 
   const handlePointsClick = async () => {
-    if (needReinitTelegramStorage) {
+    if (!isStorageInitialized) {
       await initStorage();
+      setIsStorageInitialized(true);
     }
-  }
+  };
 
   return (
-    <header
-      className="flex items-center justify-between px-4 py-3 shadow-md"
-      style={{
-        backgroundColor: themeParams.bgColor || "#ffffff",
-        color: themeParams.textColor || "#000000",
-      }}
-    >
+    <header className="fixed top-0 left-0 w-full flex items-center justify-between px-4 py-3 shadow-md bg-opacity-90 backdrop-blur-sm z-50" 
+            style={{
+              backgroundColor: themeParams.bgColor || "#ffffff",
+              color: themeParams.textColor || "#000000",
+            }}>
       {/* Название приложения */}
       <h1 className="text-2xl font-bold tracking-tight">
         <span className="text-purple-600">{appName.split('🐾')[0]}</span>
@@ -30,7 +36,7 @@ function Header(): JSX.Element {
       <div className="flex items-center gap-4">
         {/* Баллы с иконкой */}
         <div 
-          className="flex items-center bg-white/20 px-3 py-1 rounded-full border shadow-sm"
+          className="flex items-center bg-white/20 px-3 py-1 rounded-full border shadow-sm cursor-pointer"
           style={{ borderColor: themeParams.textColor?.concat('30') || '#00000030' }}
           onClick={handlePointsClick}
         >
