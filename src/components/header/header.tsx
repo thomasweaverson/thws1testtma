@@ -1,8 +1,16 @@
 import { useUserContext } from "../../context/use-user-context";
 
 function Header(): JSX.Element {
-  const { user, themeParams, catPoints } = useUserContext();
+  const { user, themeParams, catPoints, initStorage } = useUserContext();
   const appName = "PURR🐾";
+
+  const needReinitTelegramStorage = catPoints === null;
+
+  const handlePointsClick = async () => {
+    if (needReinitTelegramStorage) {
+      await initStorage();
+    }
+  }
 
   return (
     <header
@@ -24,6 +32,7 @@ function Header(): JSX.Element {
         <div 
           className="flex items-center bg-white/20 px-3 py-1 rounded-full border shadow-sm"
           style={{ borderColor: themeParams.textColor?.concat('30') || '#00000030' }}
+          onClick={handlePointsClick}
         >
           <img
             src="/img/paw-coin.svg"
@@ -31,7 +40,7 @@ function Header(): JSX.Element {
             className="w-6 h-6 mr-2"
           />
           <span className="font-medium" style={{ color: themeParams.textColor }}>
-            {catPoints}
+            {catPoints ? catPoints : "=^$.$^="}
           </span>
         </div>
 
