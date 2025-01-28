@@ -68,7 +68,32 @@ export const mockTelegram: { WebApp: TelegramWebApp } = {
           latitude: 0,
           longitude: 0,
         });
-      }
+      },
     },
+
+    // Добавляем CloudStorage
+    CloudStorage: {
+      _storage: {}, // Инициализируем _storage пустым объектом
+
+      getItem: function (key: string): string | null {
+        console.log(`CloudStorage: getItem called with key: ${key}`);
+        return this._storage[key] || null;
+      },
+
+      setItem: function (key: string, value: string): void {
+        console.log(`CloudStorage: setItem called with key: ${key}, value: ${value}`);
+        this._storage[key] = value;
+      },
+
+      removeItem: function (key: string): void {
+        console.log(`CloudStorage: removeItem called with key: ${key}`);
+        delete this._storage[key];
+      },
+
+      clear: function (): void {
+        console.log("CloudStorage: clear called");
+        this._storage = {};
+      },
+    } as TelegramWebApp["CloudStorage"], // Приводим тип к CloudStorage
   },
 };

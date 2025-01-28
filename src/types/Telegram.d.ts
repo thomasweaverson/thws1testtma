@@ -66,12 +66,20 @@ export interface TelegramWebApp {
 
   LocationManager: {
     init: (callback?: () => void) => void;
-    isInited: boolean,
-    isLocationAvailable: boolean,
-    isAccessRequested: boolean,
-    isAccessGranted: boolean,
-    getLocation: (callback: (location: LocationData | null) => void) => void
-  }
+    isInited: boolean;
+    isLocationAvailable: boolean;
+    isAccessRequested: boolean;
+    isAccessGranted: boolean;
+    getLocation: (callback: (location: LocationData | null) => void) => void;
+  };
+
+  CloudStorage: {
+    getItem: (key: string) => string | null;
+    setItem: (key: string, value: string) => void;
+    removeItem?: (key: string) => void; // Опциональный метод
+    clear?: () => void; // Опциональный метод
+    _storage: Record<string, string>; // Теперь _storage обязателен
+  };
 }
 
 export interface TelegramEventMap {

@@ -1,12 +1,10 @@
 import { useState } from "react";
+import { useUserContext } from "../../context/use-user-context";
 
-type GreetingsProps = {
-  firstName: string;
-  lastName?: string;
-};
-
-function Greetings({ firstName, lastName }: GreetingsProps): JSX.Element | null {
+function Greetings(): JSX.Element | null {
   const [isVisible, setIsVisible] = useState(true);
+
+  const { user } = useUserContext();
 
   const handleClose = () => {
     setIsVisible(false); // Устанавливаем видимость в false для плавного исчезновения
@@ -48,8 +46,8 @@ function Greetings({ firstName, lastName }: GreetingsProps): JSX.Element | null 
 
         {/* Текст приветствия */}
         <p className="text-gray-800 text-sm">
-          Hi, <span className="font-semibold">{firstName}</span>{" "}
-          {lastName && <span className="font-semibold">{lastName}</span>}!
+          Hi, <span className="font-semibold">{user?.first_name}</span>{" "}
+          {user?.last_name && <span className="font-semibold">{user?.last_name}</span>}!
           <br />
           This app is made just for fun. Paw-paw! 🐾
         </p>
