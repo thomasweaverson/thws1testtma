@@ -75,24 +75,43 @@ export const mockTelegram: { WebApp: TelegramWebApp } = {
     CloudStorage: {
       _storage: {}, // Инициализируем _storage пустым объектом
 
-      getItem: function (key: string): string | null {
+      getItem: function (key: string, callback?: (error: Error | null, value: string | null) => void): string | null {
         console.log(`CloudStorage: getItem called with key: ${key}`);
-        return this._storage[key] || null;
+        const value = this._storage[key] || null;
+        if (callback) {
+          callback(null, value); // Имитируем успешный вызов callback
+        }
+        return value;
       },
 
-      setItem: function (key: string, value: string): void {
+      setItem: function (key: string, value: string, callback?: (error: Error | null, isSuccess: boolean) => void): void {
         console.log(`CloudStorage: setItem called with key: ${key}, value: ${value}`);
         this._storage[key] = value;
+        if (callback) {
+          callback(null, true); // Имитируем успешный вызов callback
+        }
       },
 
-      removeItem: function (key: string): void {
+      removeItem: function (key: string, callback?: (error: Error | null, isSuccess: boolean) => void): void {
         console.log(`CloudStorage: removeItem called with key: ${key}`);
         delete this._storage[key];
+        if (callback) {
+          callback(null, true); // Имитируем успешный вызов callback
+        }
       },
 
-      clear: function (): void {
+      clear: function (callback?: (error: Error | null, isSuccess: boolean) => void): void {
         console.log("CloudStorage: clear called");
         this._storage = {};
+        if (callback) {
+          callback(null, true); // Имитируем успешный вызов callback
+        }
+      },
+
+      getKeys: function (callback: (error: Error | null, keys: string[]) => void): void {
+        console.log("CloudStorage: getKeys called");
+        const keys = Object.keys(this._storage);
+        callback(null, keys); // Имитируем успешный вызов callback
       },
     } as TelegramWebApp["CloudStorage"], // Приводим тип к CloudStorage
   },
