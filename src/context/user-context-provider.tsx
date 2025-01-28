@@ -28,14 +28,14 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const Telegram = window.Telegram?.WebApp;
-
+  
     if (Telegram) {
       const theme = Telegram.themeParams;
       setThemeParams({
         bgColor: theme.bg_color || "#ffffff",
         textColor: theme.text_color || "#000000",
       });
-
+  
       const userData = Telegram.initDataUnsafe?.user;
       if (userData) {
         setUser({
@@ -49,12 +49,15 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
       } else {
         console.warn("User data is not available");
       }
+  
       // Проверяем наличие catPoints в хранилище Telegram
       const storedCatPoints = Telegram.CloudStorage.getItem("catPoints");
-      if (storedCatPoints) {
+  
+      // Проверяем, что storedCatPoints существует и является корректной строкой
+      if (storedCatPoints && !isNaN(Number(storedCatPoints))) {
         setCatPoints(Number(storedCatPoints));
       } else {
-        // Если catPoints нет, инициализируем его значением 1
+        // Если catPoints нет или значение некорректно, инициализируем его значением 1
         Telegram.CloudStorage.setItem("catPoints", "1");
         setCatPoints(1);
       }
